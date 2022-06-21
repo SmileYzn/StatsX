@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="MetaMod">
+      <UniqueIdentifier>{ee0fed06-fbb4-4062-9f7d-83fdf60e5afc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Precompiled">
+      <UniqueIdentifier>{06a30243-66a3-4d06-be18-04a9eec81a3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MetaMod\MetaDLL">
+      <UniqueIdentifier>{c6f5e256-52ad-446d-a74d-31cc1c7bd8ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MetaMod\MetaEngine">
+      <UniqueIdentifier>{a6372053-2f5a-49ca-a5f0-2e766fd0236b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ReAPI">
+      <UniqueIdentifier>{d4532472-5070-46a8-b5ce-015d958c5545}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ReAPI\ReGameDLL">
+      <UniqueIdentifier>{0aa483e2-89f9-4009-98ee-6e9b629295b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ReAPI\ReAPI">
+      <UniqueIdentifier>{2bb41a67-8080-4258-9f0b-577d73b503af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MetaMod\MetaMod">
+      <UniqueIdentifier>{2200ddc4-32b4-4c17-872c-fc96ffdb3885}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="StatsX">
+      <UniqueIdentifier>{94d608f2-882e-421e-a786-49b319b32fdf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="StatsX\StatsX">
+      <UniqueIdentifier>{86a89c8b-2c51-4e19-842d-2c33f8ca306f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ReAPI\Player">
+      <UniqueIdentifier>{124ea502-5e75-439f-82b7-dc2e5ab37f20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ReAPI\StastConst">
+      <UniqueIdentifier>{4a38bd15-bc5b-44f1-b0b7-2f3d62b73a91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ReAPI\Manager">
+      <UniqueIdentifier>{c3cae394-29aa-4d1e-aeef-7ec7a9cdcd55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ReAPI\Util">
+      <UniqueIdentifier>{762acacc-e401-4ebe-bb37-bb9dea2d5fe9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ReGameDLL.h">
+      <Filter>ReAPI\ReGameDLL</Filter>
+    </ClInclude>
+    <ClInclude Include="precompiled.h">
+      <Filter>Precompiled</Filter>
+    </ClInclude>
+    <ClInclude Include="MetaDLL.h">
+      <Filter>MetaMod\MetaDLL</Filter>
+    </ClInclude>
+    <ClInclude Include="MetaEngine.h">
+      <Filter>MetaMod\MetaEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="ReAPI.h">
+      <Filter>ReAPI\ReAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="MetaMod.h">
+      <Filter>MetaMod\MetaMod</Filter>
+    </ClInclude>
+    <ClInclude Include="StatsX.h">
+      <Filter>StatsX\StatsX</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>ReAPI\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="StatsConst.h">
+      <Filter>ReAPI\StastConst</Filter>
+    </ClInclude>
+    <ClInclude Include="Manager.h">
+      <Filter>ReAPI\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Util.h">
+      <Filter>ReAPI\Util</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ReGameDLL.cpp">
+      <Filter>ReAPI\ReGameDLL</Filter>
+    </ClCompile>
+    <ClCompile Include="precompiled.cpp">
+      <Filter>Precompiled</Filter>
+    </ClCompile>
+    <ClCompile Include="MetaDLL.cpp">
+      <Filter>MetaMod\MetaDLL</Filter>
+    </ClCompile>
+    <ClCompile Include="MetaEngine.cpp">
+      <Filter>MetaMod\MetaEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="ReAPI.cpp">
+      <Filter>ReAPI\ReAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="MetaMod.cpp">
+      <Filter>MetaMod\MetaMod</Filter>
+    </ClCompile>
+    <ClCompile Include="StatsX.cpp">
+      <Filter>StatsX\StatsX</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>ReAPI\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Manager.cpp">
+      <Filter>ReAPI\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Util.cpp">
+      <Filter>ReAPI\Util</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="MetaMod.def">
+      <Filter>MetaMod</Filter>
+    </None>
+  </ItemGroup>
+</Project>
