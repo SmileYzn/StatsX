@@ -1,7 +1,7 @@
 CSSDK 	= include/cssdk
 METAMOD = include/metamod
 
-NAME = statsx
+NAME = StatsX
 
 COMPILER = g++
 
