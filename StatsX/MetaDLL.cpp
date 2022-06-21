@@ -37,12 +37,16 @@ void DLL_POST_ServerActivate(edict_t* pEdictList, int edictCount, int clientMax)
 {
 	gManager.ServerActivate();
 
+	gStats.ServerActivate();
+
 	RETURN_META(MRES_IGNORED);
 }
 
 void DLL_POST_ServerDeactivate(void)
 {
 	gManager.ServerDeactivate();
+
+	gStats.ServerDeactivate();
 
 	RETURN_META(MRES_IGNORED);
 }

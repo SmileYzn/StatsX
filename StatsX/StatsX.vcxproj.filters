@@ -28,20 +28,17 @@
     <Filter Include="StatsX">
       <UniqueIdentifier>{94d608f2-882e-421e-a786-49b319b32fdf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="StatsX\StatsX">
-      <UniqueIdentifier>{86a89c8b-2c51-4e19-842d-2c33f8ca306f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ReAPI\Player">
+    <Filter Include="StatsX\Player">
       <UniqueIdentifier>{124ea502-5e75-439f-82b7-dc2e5ab37f20}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ReAPI\StastConst">
-      <UniqueIdentifier>{4a38bd15-bc5b-44f1-b0b7-2f3d62b73a91}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ReAPI\Manager">
-      <UniqueIdentifier>{c3cae394-29aa-4d1e-aeef-7ec7a9cdcd55}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ReAPI\Util">
+    <Filter Include="StatsX\Util">
       <UniqueIdentifier>{762acacc-e401-4ebe-bb37-bb9dea2d5fe9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="StatsX\Stats">
+      <UniqueIdentifier>{86a89c8b-2c51-4e19-842d-2c33f8ca306f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="StatsX\Manager">
+      <UniqueIdentifier>{c1b477bc-e89f-4e77-be8e-8bc77bd13253}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -63,20 +60,17 @@
     <ClInclude Include="MetaMod.h">
       <Filter>MetaMod\MetaMod</Filter>
     </ClInclude>
-    <ClInclude Include="StatsX.h">
-      <Filter>StatsX\StatsX</Filter>
+    <ClInclude Include="Stats.h">
+      <Filter>StatsX\Stats</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
-      <Filter>ReAPI\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="StatsConst.h">
-      <Filter>ReAPI\StastConst</Filter>
-    </ClInclude>
-    <ClInclude Include="Manager.h">
-      <Filter>ReAPI\Manager</Filter>
+      <Filter>StatsX\Player</Filter>
     </ClInclude>
     <ClInclude Include="Util.h">
-      <Filter>ReAPI\Util</Filter>
+      <Filter>StatsX\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Manager.h">
+      <Filter>StatsX\Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -98,17 +92,17 @@
     <ClCompile Include="MetaMod.cpp">
       <Filter>MetaMod\MetaMod</Filter>
     </ClCompile>
-    <ClCompile Include="StatsX.cpp">
-      <Filter>StatsX\StatsX</Filter>
+    <ClCompile Include="Stats.cpp">
+      <Filter>StatsX\Stats</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
-      <Filter>ReAPI\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="Manager.cpp">
-      <Filter>ReAPI\Manager</Filter>
+      <Filter>StatsX\Player</Filter>
     </ClCompile>
     <ClCompile Include="Util.cpp">
-      <Filter>ReAPI\Util</Filter>
+      <Filter>StatsX\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Manager.cpp">
+      <Filter>StatsX\Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

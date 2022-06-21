@@ -96,6 +96,11 @@ bool ReAPI_Stop()
 	return true;
 }
 
+void ReAPI_Cvar_DirectSet(IRehldsHook_Cvar_DirectSet* chain, cvar_t* var, const char* value)
+{
+	chain->callNext(var, value);
+}
+
 void ReAPI_SV_DropClient(IRehldsHook_SV_DropClient* chain, IGameClient* client, bool crash, const char* Reason)
 {
 	auto pEntity = client->GetEdict();
@@ -110,7 +115,7 @@ void ReAPI_SV_DropClient(IRehldsHook_SV_DropClient* chain, IGameClient* client, 
 
 			if (Player)
 			{
-				gManager.Disconnected(Player);
+				gStats.Disconnected(Player);
 			}
 		}
 	}

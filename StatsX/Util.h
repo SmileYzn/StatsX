@@ -11,6 +11,7 @@ enum UTIL_SAY_TEXT_COLOR
 class CUtil
 {
 public:
+	cvar_t* CvarRegister(const char* Name, const char* Value);
 	void ServerPrint(const char* Format, ...);
 	void SayText(edict_t* pEntity, int Sender, const char* Format, ...);
 };

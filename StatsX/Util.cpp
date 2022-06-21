@@ -2,6 +2,28 @@
 
 CUtil gUtil;
 
+cvar_t* CUtil::CvarRegister(const char* Name, const char* Value)
+{
+	// Get Pointer by variable name
+	cvar_t* Pointer = CVAR_GET_POINTER(Name);
+
+	// If not exists
+	if (Pointer == NULL)
+	{
+		// Make structure data
+		cvar_t Register = { Name, (char*)Value, FCVAR_SERVER | FCVAR_SPONLY };
+
+		// Register the variable
+		CVAR_REGISTER(&Register);
+
+		// Return created pointer
+		return CVAR_GET_POINTER(Name);
+	}
+
+	// Return existing pointer to variable
+	return Pointer;
+}
+
 void CUtil::ServerPrint(const char* Format, ...)
 {
 	va_list argList;

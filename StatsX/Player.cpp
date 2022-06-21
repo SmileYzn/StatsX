@@ -1,10 +1,10 @@
 #include "precompiled.h"
 
-CPlayer::CPlayer(const char* Name, const  char* Auth)
+void CPlayer::Clear()
 {
-	strncpy(this->Name, Name, sizeof(this->Name));
+	memset(this->Name, 0, sizeof(this->Name));
 
-	strncpy(this->Auth, Auth, sizeof(this->Auth));
+	memset(this->Auth, 0, sizeof(this->Auth));
 
 	this->Frags = 0;
 
@@ -24,6 +24,8 @@ CPlayer::CPlayer(const char* Name, const  char* Auth)
 
 	this->JoinTime = gpGlobals->time;
 
+	this->GameTime = 0.0f;
+
 	memset(this->Rounds, 0, sizeof(this->Rounds));
 
 	this->RoundWinShare = 0.0f;
@@ -41,7 +43,12 @@ CPlayer::CPlayer(const char* Name, const  char* Auth)
 	memset(this->Money, 0, sizeof(this->Money));
 }
 
-void CPlayer::SaveStats()
+void CPlayer::Init(const char* InitName, const  char* InitAuth)
 {
-	//
+	this->Clear();
+
+	strncpy(this->Name, InitName, sizeof(this->Name));
+
+	strncpy(this->Auth, InitAuth, sizeof(this->Auth));
 }
+

@@ -101,8 +101,7 @@
     <ClInclude Include="MetaMod.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="precompiled.h" />
-    <ClInclude Include="StatsConst.h" />
-    <ClInclude Include="StatsX.h" />
+    <ClInclude Include="Stats.h" />
     <ClInclude Include="ReAPI.h" />
     <ClInclude Include="ReGameDLL.h" />
     <ClInclude Include="Util.h" />
@@ -117,7 +116,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="StatsX.cpp" />
+    <ClCompile Include="Stats.cpp" />
     <ClCompile Include="ReAPI.cpp" />
     <ClCompile Include="ReGameDLL.cpp" />
     <ClCompile Include="Util.cpp" />

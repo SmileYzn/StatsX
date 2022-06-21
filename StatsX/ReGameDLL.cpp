@@ -155,7 +155,7 @@ bool ReGameDLL_CBasePlayer_GetIntoGame(IReGameHook_CBasePlayer_GetIntoGame* chai
 {
 	auto ret = chain->callNext(Player);
 
-	gManager.GetIntoGame(Player);
+	gStats.GetIntoGame(Player);
 
 	return ret;
 }
@@ -164,16 +164,16 @@ void ReGameDLL_CBasePlayer_AddAccount(IReGameHook_CBasePlayer_AddAccount *chain,
 {
 	chain->callNext(pthis, amount, type, bTrackChange);
 
-	gManager.AddAccount(pthis, amount, type, bTrackChange);
+	gStats.AddAccount(pthis, amount, type, bTrackChange);
 }
 
 CGrenade* ReGameDLL_PlantBomb(IReGameHook_PlantBomb* chain, entvars_t* pevOwner, Vector& vecStart, Vector& vecVelocity)
 {
-	gManager.PlantBomb(pevOwner, false);
+	gStats.PlantBomb(pevOwner, false);
 
 	auto ret = chain->callNext(pevOwner, vecStart, vecVelocity);
 
-	gManager.PlantBomb(pevOwner, true);
+	gStats.PlantBomb(pevOwner, true);
 
 	return ret;
 }
@@ -182,35 +182,35 @@ void ReGameDLL_CGrenade_DefuseBombStart(IReGameHook_CGrenade_DefuseBombStart* ch
 {
 	chain->callNext(pthis, pPlayer);
 
-	gManager.DefuseBombStart(pPlayer);
+	gStats.DefuseBombStart(pPlayer);
 }
 
 void ReGameDLL_CGrenade_DefuseBombEnd(IReGameHook_CGrenade_DefuseBombEnd* chain, CGrenade* pthis, CBasePlayer* pPlayer, bool Defused)
 {
 	chain->callNext(pthis, pPlayer, Defused);
 
-	gManager.DefuseBombEnd(pPlayer, Defused);
+	gStats.DefuseBombEnd(pPlayer, Defused);
 }
 
 void ReGameDLL_CGrenade_ExplodeBomb(IReGameHook_CGrenade_ExplodeBomb* chain, CGrenade* pthis, TraceResult* ptr, int bitsDamageType)
 {
 	chain->callNext(pthis, ptr, bitsDamageType);
 
-	gManager.ExplodeBomb(pthis, ptr, bitsDamageType);
+	gStats.ExplodeBomb(pthis, ptr, bitsDamageType);
 }
 
 void ReGameDLL_CSGameRules_OnRoundFreezeEnd(IReGameHook_CSGameRules_OnRoundFreezeEnd* chain)
 {
 	chain->callNext();
 
-	gManager.RoundFreezeEnd();
+	gStats.RoundFreezeEnd();
 }
 
 bool ReGameDLL_RoundEnd(IReGameHook_RoundEnd* chain, int winStatus, ScenarioEventEndRound event, float tmDelay)
 {
 	auto ret = chain->callNext(winStatus, event, tmDelay);
 
-	gManager.RoundEnd(winStatus, event, tmDelay);
+	gStats.RoundEnd(winStatus, event, tmDelay);
 
 	return ret;
 }
@@ -219,7 +219,7 @@ int ReGameDLL_CBasePlayer_TakeDamage(IReGameHook_CBasePlayer_TakeDamage *chain, 
 {
 	int ret = chain->callNext(pthis, pevInflictor, pevAttacker, flDamage, bitsDamageType);
 
-	gManager.TakeDamage(pthis, pevInflictor, pevAttacker, flDamage, bitsDamageType);
+	gStats.TakeDamage(pthis, pevInflictor, pevAttacker, flDamage, bitsDamageType);
 
 	return ret;
 }
@@ -228,12 +228,12 @@ void ReGameDLL_CBasePlayer_Killed(IReGameHook_CBasePlayer_Killed* chain, CBasePl
 {
 	chain->callNext(pthis, pevAttacker, iGib);
 
-	gManager.Killed(pthis, pevAttacker, iGib);
+	gStats.Killed(pthis, pevAttacker, iGib);
 }
 
 void ReGameDLL_CBasePlayer_SetAnimation(IReGameHook_CBasePlayer_SetAnimation* chain,CBasePlayer* pthis, PLAYER_ANIM playerAnim)
 {
 	chain->callNext(pthis, playerAnim);
 
-	gManager.SetAnimation(pthis, playerAnim);
+	gStats.SetAnimation(pthis, playerAnim);
 }

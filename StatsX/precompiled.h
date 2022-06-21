@@ -46,8 +46,7 @@
 #include "ReGameDLL.h"
 
 // Stats X
-#include "StatsX.h"
-#include "StatsConst.h"
-#include "Util.h"
 #include "Player.h"
+#include "Stats.h"
+#include "Util.h"
 #include "Manager.h"
