@@ -18,14 +18,14 @@ jobs:
       run: sudo apt-get install -qq -y build-essential g++ gcc-multilib g++-multilib
       
     - name: Run build
-      working-directory: ./PugMod
+      working-directory: ./StatsX
       run: make
     
     - name: Move files
       run: |
-        mkdir -p publish/addons/pugmod/dlls
-        mv ./PugMod/Release/pugmod_mm.so publish/addons/pugmod/dlls
-        cp -ar cstrike/. publish
+        mkdir -p publish/addons/statsx/dlls
+        mv ./StatsX/Release/StatsX_mm.so publish/addons/statsx/dlls
+        #cp -ar cstrike/. publish
 
     - name: Deploy artifacts
       uses: actions/upload-artifact@v2
