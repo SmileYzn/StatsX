@@ -1,9 +1,9 @@
 #pragma once
 
-#define MANAGER_ASSISTANCE_DMG  50	// Mininum damage to take assistance for player
-#define MANAGER_RWS_MAP_TARGET  0.7	// Round Win Share:
-#define MANAGER_RWS_C4_EXPLODE  0.3	// Round Win Share:
-#define MANAGER_RWS_C4_DEFUSED  0.3	// Round Win Share:
+#define MANAGER_ASSISTANCE_DMG  50		// Mininum damage to take assistance for player
+#define MANAGER_RWS_MAP_TARGET  0.7f	// Round Win Share:
+#define MANAGER_RWS_C4_EXPLODE  0.3f	// Round Win Share:
+#define MANAGER_RWS_C4_DEFUSED  0.3f	// Round Win Share:
 
 class CStats
 {

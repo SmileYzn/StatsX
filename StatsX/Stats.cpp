@@ -217,6 +217,74 @@ void CStats::Killed(CBasePlayer* Player, entvars_t* pevAttacker, int iGib)
 						}
 					}
 				}
+
+				if (!Killer->IsBot())
+				{
+					gUtil.ServerPrint("===============================================");
+					gUtil.ServerPrint("DEBUG %s STATS", STRING(Killer->edict()->v.netname));
+					gUtil.ServerPrint("===============================================");
+					//
+					gUtil.ServerPrint
+					(
+						"[Stats] %d %d %d %d %d %d %d %d %f %f",
+						this->m_Data[KillerIndex].Frags,
+						this->m_Data[KillerIndex].Assists,
+						this->m_Data[KillerIndex].Deaths,
+						this->m_Data[KillerIndex].Headshot,
+						this->m_Data[KillerIndex].Shots,
+						this->m_Data[KillerIndex].Hits,
+						this->m_Data[KillerIndex].Damage,
+						this->m_Data[KillerIndex].DamageReceive,
+						this->m_Data[KillerIndex].JoinTime,
+						this->m_Data[KillerIndex].GameTime
+					);
+					//
+					gUtil.ServerPrint
+					(
+						"[Rounds] %d %d %d %d %d (%f)",
+						this->m_Data[KillerIndex].Rounds[ROUND_PLAY],
+						this->m_Data[KillerIndex].Rounds[ROUND_WIN_TR],
+						this->m_Data[KillerIndex].Rounds[ROUND_LOSE_TR],
+						this->m_Data[KillerIndex].Rounds[ROUND_WIN_CT],
+						this->m_Data[KillerIndex].Rounds[ROUND_LOSE_CT],
+						this->m_Data[KillerIndex].RoundWinShare
+					);
+					//
+					gUtil.ServerPrint
+					(
+						"[Bomb] %d %d %d %d %d",
+						this->m_Data[KillerIndex].BombStats[BOMB_PLANTING],
+						this->m_Data[KillerIndex].BombStats[BOMB_PLANTED],
+						this->m_Data[KillerIndex].BombStats[BOMB_EXPLODED],
+						this->m_Data[KillerIndex].BombStats[BOMB_DEFUSING],
+						this->m_Data[KillerIndex].BombStats[BOMB_DEFUSED]
+					);
+					//
+					gUtil.ServerPrint
+					(
+						"[HitBox] (%d %d) (%d %d) (%d %d) (%d %d) (%d %d) (%d %d) (%d %d) (%d %d) (%d %d)",
+						this->m_Data[KillerIndex].HitBox[HITGROUP_GENERIC],
+						this->m_Data[KillerIndex].HitBoxDamage[HITGROUP_GENERIC],
+						this->m_Data[KillerIndex].HitBox[HITGROUP_HEAD],
+						this->m_Data[KillerIndex].HitBoxDamage[HITGROUP_HEAD],
+						this->m_Data[KillerIndex].HitBox[HITGROUP_CHEST],
+						this->m_Data[KillerIndex].HitBoxDamage[HITGROUP_CHEST],
+						this->m_Data[KillerIndex].HitBox[HITGROUP_STOMACH],
+						this->m_Data[KillerIndex].HitBoxDamage[HITGROUP_STOMACH],
+						this->m_Data[KillerIndex].HitBox[HITGROUP_LEFTARM],
+						this->m_Data[KillerIndex].HitBoxDamage[HITGROUP_LEFTARM],
+						this->m_Data[KillerIndex].HitBox[HITGROUP_RIGHTARM],
+						this->m_Data[KillerIndex].HitBoxDamage[HITGROUP_RIGHTARM],
+						this->m_Data[KillerIndex].HitBox[HITGROUP_LEFTLEG],
+						this->m_Data[KillerIndex].HitBoxDamage[HITGROUP_LEFTLEG],
+						this->m_Data[KillerIndex].HitBox[HITGROUP_RIGHTLEG],
+						this->m_Data[KillerIndex].HitBoxDamage[HITGROUP_RIGHTLEG],
+						this->m_Data[KillerIndex].HitBox[HITGROUP_SHIELD],
+						this->m_Data[KillerIndex].HitBoxDamage[HITGROUP_SHIELD]
+					);
+					//
+					gUtil.ServerPrint("===============================================");
+				}
 			}
 		}
 	}
@@ -402,16 +470,14 @@ void CStats::RoundEnd(int winStatus, ScenarioEventEndRound event, float tmDelay)
 					{
 						this->m_Data[TempIndex].Rounds[(Temp->m_iTeam == TERRORIST) ? ROUND_WIN_TR : ROUND_WIN_CT]++;
 
-						// Versus
 						if (this->m_RoundVersus[TempIndex] > 0)
 						{
 							this->m_Data[TempIndex].Versus[this->m_RoundVersus[TempIndex]]++;
 						}
 
-						// Round Win Share
 						if (this->m_RoundDamageSelf[TempIndex] > 0)
 						{
-							float RoundWinShare = (this->m_RoundDamageSelf[TempIndex] / this->m_RoundDamageTeam[Winner]);
+							float RoundWinShare = (float)((float)this->m_RoundDamageSelf[TempIndex] / (float)this->m_RoundDamageTeam[Winner]);
 
 							if (event == ROUND_BOMB_DEFUSED || event == ROUND_TARGET_BOMB)
 							{

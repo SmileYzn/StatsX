@@ -61,23 +61,24 @@ public:
 
 	char Name[32] = { 0 };
 	char Auth[35] = { 0 };
-	int Frags = 0;												// Test
-	int Assists = 0;											// Test
-	int Deaths = 0;												// Test
-	int Headshot = 0;											// Test
-	int Shots = 0;												// Test
-	int Hits = 0;												// Test
-	int Damage = 0;												// Test
-	int DamageReceive = 0;										// Test
-	float JoinTime = 0.0f;										// Test
-	float GameTime = 0.0f;										// 
-	int Rounds[ROUND_LOSE_CT + 1] = { 0 };						// Test
-	float RoundWinShare = 0.0f;									// Test
+	
+	int Frags = 0;												// Ok
+	int Assists = 0;											// Ok
+	int Deaths = 0;												// Ok
+	int Headshot = 0;											// Ok
+	int Shots = 0;												// Ok
+	int Hits = 0;												// Ok
+	int Damage = 0;												// Ok
+	int DamageReceive = 0;										// Ok
+	float JoinTime = 0.0f;										// Ok
+	float GameTime = 0.0f;										// To do: Add Total Game Time
+	int Rounds[ROUND_LOSE_CT + 1] = { 0 };						// Ok
+	float RoundWinShare = 0.0f;									// Ok
 	int BombStats[BOMB_DEFUSED + 1] = { 0 };					// Test
-	int HitBox[HITGROUP_SHIELD + 1] = { 0 };					// Test
-	int HitBoxDamage[HITGROUP_SHIELD + 1] = { 0 };				// Test
+	int HitBox[HITGROUP_SHIELD + 1] = { 0 };					// OK
+	int HitBoxDamage[HITGROUP_SHIELD + 1] = { 0 };				// OK
 	int WeaponStats[MAX_WEAPONS + 1][WEAPON_DAMAGE + 1] = { 0 };// Test
 	int KillStreak[MAX_CLIENTS + 1] = { 0 };					// Test
 	int Versus[MAX_CLIENTS + 1] = { 0 };						// Test
-	int Money[RT_VIP_RESCUED_MYSELF + 1] = { 0 };				// Test
+	int Money[RT_VIP_RESCUED_MYSELF + 1] = { 0 };				// OK
 };
