@@ -95,7 +95,7 @@ void CStats::TakeDamage(CBasePlayer* Player, entvars_t* pevInflictor, entvars_t*
 							{
 								this->m_Data[AttackerIndex].WeaponStats[info.iId][WEAPON_HIT]++;
 
-								this->m_Data[AttackerIndex].WeaponStats[info.iId][WEAPON_DAMAGE]++;
+								this->m_Data[AttackerIndex].WeaponStats[info.iId][WEAPON_DAMAGE] += Player->m_lastDamageAmount;
 							}
 						}
 					}
@@ -218,7 +218,7 @@ void CStats::Killed(CBasePlayer* Player, entvars_t* pevAttacker, int iGib)
 					}
 				}
 
-				if (!Killer->IsBot())
+				if (Killer->IsBot())
 				{
 					gUtil.ServerPrint("===============================================");
 					gUtil.ServerPrint("DEBUG %s STATS", STRING(Killer->edict()->v.netname));
@@ -262,6 +262,26 @@ void CStats::Killed(CBasePlayer* Player, entvars_t* pevAttacker, int iGib)
 					//
 					gUtil.ServerPrint
 					(
+						"[KillStreak] %d %d %d %d %d",
+						this->m_Data[KillerIndex].KillStreak[1],
+						this->m_Data[KillerIndex].KillStreak[2],
+						this->m_Data[KillerIndex].KillStreak[3],
+						this->m_Data[KillerIndex].KillStreak[4],
+						this->m_Data[KillerIndex].KillStreak[5]
+					);
+					//
+					gUtil.ServerPrint
+					(
+						"[Versus] %d %d %d %d %d",
+						this->m_Data[KillerIndex].Versus[1],
+						this->m_Data[KillerIndex].Versus[2],
+						this->m_Data[KillerIndex].Versus[3],
+						this->m_Data[KillerIndex].Versus[4],
+						this->m_Data[KillerIndex].Versus[5]
+					);
+					//
+					gUtil.ServerPrint
+					(
 						"[HitBox] (%d %d) (%d %d) (%d %d) (%d %d) (%d %d) (%d %d) (%d %d) (%d %d) (%d %d)",
 						this->m_Data[KillerIndex].HitBox[HITGROUP_GENERIC],
 						this->m_Data[KillerIndex].HitBoxDamage[HITGROUP_GENERIC],
@@ -283,6 +303,29 @@ void CStats::Killed(CBasePlayer* Player, entvars_t* pevAttacker, int iGib)
 						this->m_Data[KillerIndex].HitBoxDamage[HITGROUP_SHIELD]
 					);
 					//
+					for (int Weapon = 0; Weapon <= MAX_WEAPONS; Weapon++)
+					{
+						if (this->m_Data[KillerIndex].WeaponStats[Weapon][WEAPON_SHOT] || this->m_Data[KillerIndex].WeaponStats[Weapon][WEAPON_KILL] || this->m_Data[KillerIndex].WeaponStats[Weapon][WEAPON_DEATH])
+						{
+							auto info = g_ReGameApi->GetWeaponInfo(Weapon);
+
+							if (info)
+							{
+								gUtil.ServerPrint
+								(
+									"[%s] %d %d %d %d %d %d",
+									info->entityName,
+									this->m_Data[KillerIndex].WeaponStats[Weapon][WEAPON_KILL],
+									this->m_Data[KillerIndex].WeaponStats[Weapon][WEAPON_DEATH],
+									this->m_Data[KillerIndex].WeaponStats[Weapon][WEAPON_HEADSHOT],
+									this->m_Data[KillerIndex].WeaponStats[Weapon][WEAPON_SHOT],
+									this->m_Data[KillerIndex].WeaponStats[Weapon][WEAPON_HIT],
+									this->m_Data[KillerIndex].WeaponStats[Weapon][WEAPON_DAMAGE]
+								);
+							}
+						}
+					}
+					//
 					gUtil.ServerPrint("===============================================");
 				}
 			}
@@ -296,21 +339,25 @@ void CStats::SetAnimation(CBasePlayer* Player, PLAYER_ANIM playerAnim)
 	{
 		if (Player)
 		{
-			if (playerAnim == PLAYER_ATTACK1)
+			if (playerAnim == PLAYER_ATTACK1 || playerAnim == PLAYER_ATTACK2)
 			{
 				if (Player->m_pActiveItem)
 				{
 					if (Player->m_pActiveItem->IsWeapon())
-					{
-						ItemInfo info = { 0 };
-
-						if (Player->m_pActiveItem->GetItemInfo(&info))
+					{ 
+						if (Player->m_pActiveItem->iItemSlot() >= PRIMARY_WEAPON_SLOT && Player->m_pActiveItem->iItemSlot() <= GRENADE_SLOT)
 						{
-							auto EntIndex = Player->entindex();
+							if (Player->m_pActiveItem->m_iId >= WEAPON_P228 && Player->m_pActiveItem->m_iId <= WEAPON_P90)
+							{
+								if (Player->m_pActiveItem->m_iId != WEAPON_C4 && Player->m_pActiveItem->m_iId != WEAPON_SMOKEGRENADE &&Player->m_pActiveItem->m_iId != WEAPON_FLASHBANG)
+								{
+									auto EntIndex = Player->entindex();
 
-							this->m_Data[EntIndex].Shots++;
+									this->m_Data[EntIndex].Shots++;
 
-							this->m_Data[EntIndex].WeaponStats[info.iId][WEAPON_SHOT]++;
+									this->m_Data[EntIndex].WeaponStats[Player->m_pActiveItem->m_iId][WEAPON_SHOT]++;
+								}
+							}
 						}
 					}
 				}
