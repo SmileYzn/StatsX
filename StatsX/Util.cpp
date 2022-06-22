@@ -108,3 +108,33 @@ void CUtil::SayText(edict_t* pEntity, int Sender, const char* Format, ...)
 		}
 	}
 }
+
+bool CUtil::IsVisible(edict_t* pEntity, edict_t* pTarget)
+{
+	if (!FNullEnt(pEntity) && !FNullEnt(pTarget))
+	{
+		if (pTarget->v.effects & EF_NODRAW || pTarget->v.flags & FL_NOTARGET)
+		{
+			return false;
+		}
+
+		Vector vLooker = pEntity->v.origin + pEntity->v.view_ofs;
+
+		Vector vTarget = pTarget->v.origin + pTarget->v.view_ofs;
+
+		TraceResult tr = { 0 };
+
+		TRACE_LINE(vLooker, vTarget, FALSE, pEntity, &tr);
+
+		if (tr.fInOpen && tr.fInWater)
+		{ 
+			return false;
+		}
+		else if ((tr.flFraction == 1.0) || (ENTINDEX(tr.pHit) == ENTINDEX(pTarget)))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
