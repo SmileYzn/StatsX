@@ -85,7 +85,7 @@ void CStats::TakeDamage(CBasePlayer* Player, entvars_t* pevInflictor, entvars_t*
 
 					this->m_RoundDamageTeam[Attacker->m_iTeam] += Player->m_lastDamageAmount;
 
-					auto ItemIndex = this->IsWeapon(Attacker);
+					auto ItemIndex = this->IsWeapon(Attacker, true);
 
 					if (ItemIndex)
 					{
@@ -130,7 +130,7 @@ void CStats::Killed(CBasePlayer* Player, entvars_t* pevAttacker, int iGib)
 								this->m_Data[KillerIndex].Headshot++;
 							}
 
-							auto ItemIndex = this->IsWeapon(Killer);
+							auto ItemIndex = this->IsWeapon(Killer, true);
 
 							if (ItemIndex)
 							{
@@ -145,9 +145,12 @@ void CStats::Killed(CBasePlayer* Player, entvars_t* pevAttacker, int iGib)
 
 								if (ItemIndex != WEAPON_AWP)
 								{
-									if (Player->m_lastDamageAmount >= 100)
+									if (Player->m_iLastClientHealth >= 100)
 									{
-										this->m_Data[KillerIndex].HackStats[HACK_ONE_SHOT]++;
+										if (Player->m_lastDamageAmount >= 100)
+										{
+											this->m_Data[KillerIndex].HackStats[HACK_ONE_SHOT]++;
+										}
 									}
 								}
 
@@ -161,17 +164,19 @@ void CStats::Killed(CBasePlayer* Player, entvars_t* pevAttacker, int iGib)
 
 								if (ItemIndex != WEAPON_HEGRENADE)
 								{
-									if (!this->IsVisible(Killer->edict(), Player->edict()))
+									if (!this->IsVisible(Killer, Player))
 									{
 										this->m_Data[KillerIndex].HackStats[HACK_WALL_FRAG]++;
 									}
 								}
 							}
 
-							if ((Killer->m_blindStartTime + Killer->m_blindHoldTime) >= gpGlobals->time)
+							if (this->Isblind(Killer))
 							{
-								this->m_Data[KillerIndex].HackStats[HACK_BLIND_FRAGS]++;
+								this->m_Data[KillerIndex].HackStats[HACK_BLIND_FRAG]++;
 							}
+
+							int* PlayerCount = this->CountAlive();
 
 							for (int i = 1; i <= gpGlobals->maxClients; ++i)
 							{
@@ -179,25 +184,23 @@ void CStats::Killed(CBasePlayer* Player, entvars_t* pevAttacker, int iGib)
 
 								if (Temp)
 								{
-									auto TempIndex = Temp->entindex();
-
-									if (TempIndex != Killer->entindex())
+									if (Temp->m_iTeam == TERRORIST || Temp->m_iTeam == CT)
 									{
-										if (this->m_RoundDamage[TempIndex][VictimIndex] >= MANAGER_ASSISTANCE_DMG)
-										{
-											this->m_Data[TempIndex].Assists++;
-										}
-									}
+										auto TempIndex = Temp->entindex();
 
-									if (!this->m_RoundVersus[TempIndex])
-									{
-										if (this->CountAlive(Temp->m_iTeam) == 1)
+										if (TempIndex != Killer->entindex())
 										{
-											auto EnemyCount = this->CountAlive(Temp->m_iTeam == CT ? TERRORIST : CT);
-
-											if (EnemyCount)
+											if (this->m_RoundDamage[TempIndex][VictimIndex] >= MANAGER_ASSISTANCE_DMG)
 											{
-												this->m_RoundVersus[TempIndex] = EnemyCount;
+												this->m_Data[TempIndex].Assists++;
+											}
+										}
+
+										if (!this->m_RoundVersus[TempIndex])
+										{
+											if (PlayerCount[Temp->m_iTeam] == 1)
+											{
+												this->m_RoundVersus[TempIndex] = PlayerCount[Temp->m_iTeam == TERRORIST ? CT : TERRORIST];
 											}
 										}
 									}
@@ -205,119 +208,6 @@ void CStats::Killed(CBasePlayer* Player, entvars_t* pevAttacker, int iGib)
 							}
 						}
 					}
-
-#pragma region PRINT_DEBUG
-					//if (Killer->IsBot())
-					//{
-					//	gUtil.ServerPrint("===============================================");
-					//	gUtil.ServerPrint("DEBUG %s STATS", STRING(Killer->edict()->v.netname));
-					//	gUtil.ServerPrint("===============================================");
-					//	//
-					//	gUtil.ServerPrint
-					//	(
-					//		"[Stats] %d %d %d %d %d %d %d %d %f %f",
-					//		this->m_Data[KillerIndex].Frags,
-					//		this->m_Data[KillerIndex].Assists,
-					//		this->m_Data[KillerIndex].Deaths,
-					//		this->m_Data[KillerIndex].Headshot,
-					//		this->m_Data[KillerIndex].Shots,
-					//		this->m_Data[KillerIndex].Hits,
-					//		this->m_Data[KillerIndex].Damage,
-					//		this->m_Data[KillerIndex].DamageReceive,
-					//		this->m_Data[KillerIndex].JoinTime,
-					//		this->m_Data[KillerIndex].GameTime
-					//	);
-					//	//
-					//	gUtil.ServerPrint
-					//	(
-					//		"[Rounds] %d %d %d %d %d (%f)",
-					//		this->m_Data[KillerIndex].Rounds[ROUND_PLAY],
-					//		this->m_Data[KillerIndex].Rounds[ROUND_WIN_TR],
-					//		this->m_Data[KillerIndex].Rounds[ROUND_LOSE_TR],
-					//		this->m_Data[KillerIndex].Rounds[ROUND_WIN_CT],
-					//		this->m_Data[KillerIndex].Rounds[ROUND_LOSE_CT],
-					//		this->m_Data[KillerIndex].RoundWinShare
-					//	);
-					//	//
-					//	gUtil.ServerPrint
-					//	(
-					//		"[Bomb] %d %d %d %d %d",
-					//		this->m_Data[KillerIndex].BombStats[BOMB_PLANTING],
-					//		this->m_Data[KillerIndex].BombStats[BOMB_PLANTED],
-					//		this->m_Data[KillerIndex].BombStats[BOMB_EXPLODED],
-					//		this->m_Data[KillerIndex].BombStats[BOMB_DEFUSING],
-					//		this->m_Data[KillerIndex].BombStats[BOMB_DEFUSED]
-					//	);
-					//	//
-					//	gUtil.ServerPrint
-					//	(
-					//		"[KillStreak] %d %d %d %d %d",
-					//		this->m_Data[KillerIndex].KillStreak[1],
-					//		this->m_Data[KillerIndex].KillStreak[2],
-					//		this->m_Data[KillerIndex].KillStreak[3],
-					//		this->m_Data[KillerIndex].KillStreak[4],
-					//		this->m_Data[KillerIndex].KillStreak[5]
-					//	);
-					//	//
-					//	gUtil.ServerPrint
-					//	(
-					//		"[Versus] %d %d %d %d %d",
-					//		this->m_Data[KillerIndex].Versus[1],
-					//		this->m_Data[KillerIndex].Versus[2],
-					//		this->m_Data[KillerIndex].Versus[3],
-					//		this->m_Data[KillerIndex].Versus[4],
-					//		this->m_Data[KillerIndex].Versus[5]
-					//	);
-					//	//
-					//	gUtil.ServerPrint
-					//	(
-					//		"[HitBox] (%d %d) (%d %d) (%d %d) (%d %d) (%d %d) (%d %d) (%d %d) (%d %d) (%d %d)",
-					//		this->m_Data[KillerIndex].HitBox[HITGROUP_GENERIC],
-					//		this->m_Data[KillerIndex].HitBoxDamage[HITGROUP_GENERIC],
-					//		this->m_Data[KillerIndex].HitBox[HITGROUP_HEAD],
-					//		this->m_Data[KillerIndex].HitBoxDamage[HITGROUP_HEAD],
-					//		this->m_Data[KillerIndex].HitBox[HITGROUP_CHEST],
-					//		this->m_Data[KillerIndex].HitBoxDamage[HITGROUP_CHEST],
-					//		this->m_Data[KillerIndex].HitBox[HITGROUP_STOMACH],
-					//		this->m_Data[KillerIndex].HitBoxDamage[HITGROUP_STOMACH],
-					//		this->m_Data[KillerIndex].HitBox[HITGROUP_LEFTARM],
-					//		this->m_Data[KillerIndex].HitBoxDamage[HITGROUP_LEFTARM],
-					//		this->m_Data[KillerIndex].HitBox[HITGROUP_RIGHTARM],
-					//		this->m_Data[KillerIndex].HitBoxDamage[HITGROUP_RIGHTARM],
-					//		this->m_Data[KillerIndex].HitBox[HITGROUP_LEFTLEG],
-					//		this->m_Data[KillerIndex].HitBoxDamage[HITGROUP_LEFTLEG],
-					//		this->m_Data[KillerIndex].HitBox[HITGROUP_RIGHTLEG],
-					//		this->m_Data[KillerIndex].HitBoxDamage[HITGROUP_RIGHTLEG],
-					//		this->m_Data[KillerIndex].HitBox[HITGROUP_SHIELD],
-					//		this->m_Data[KillerIndex].HitBoxDamage[HITGROUP_SHIELD]
-					//	);
-					//	//
-					//	for (int Weapon = 0; Weapon <= MAX_WEAPONS; Weapon++)
-					//	{
-					//		if (this->m_Data[KillerIndex].WeaponStats[Weapon][WEAPON_SHOT] || this->m_Data[KillerIndex].WeaponStats[Weapon][WEAPON_KILL] || this->m_Data[KillerIndex].WeaponStats[Weapon][WEAPON_DEATH])
-					//		{
-					//			auto info = g_ReGameApi->GetWeaponInfo(Weapon);
-
-					//			if (info)
-					//			{
-					//				gUtil.ServerPrint
-					//				(
-					//					"[%s] %d %d %d %d %d %d",
-					//					info->entityName,
-					//					this->m_Data[KillerIndex].WeaponStats[Weapon][WEAPON_KILL],
-					//					this->m_Data[KillerIndex].WeaponStats[Weapon][WEAPON_DEATH],
-					//					this->m_Data[KillerIndex].WeaponStats[Weapon][WEAPON_HEADSHOT],
-					//					this->m_Data[KillerIndex].WeaponStats[Weapon][WEAPON_SHOT],
-					//					this->m_Data[KillerIndex].WeaponStats[Weapon][WEAPON_HIT],
-					//					this->m_Data[KillerIndex].WeaponStats[Weapon][WEAPON_DAMAGE]
-					//				);
-					//			}
-					//		}
-					//	}
-					//	//
-					//	gUtil.ServerPrint("===============================================");
-					//}
-#pragma endregion PRINT_DEBUG
 				}
 			}
 		}
@@ -332,7 +222,7 @@ void CStats::SetAnimation(CBasePlayer* Player, PLAYER_ANIM playerAnim)
 		{
 			if (playerAnim == PLAYER_ATTACK1 || playerAnim == PLAYER_ATTACK2)
 			{
-				auto ItemIndex = this->IsWeapon(Player);
+				auto ItemIndex = this->IsWeapon(Player, false);
 
 				if (ItemIndex)
 				{
@@ -525,10 +415,14 @@ void CStats::RoundEnd(int winStatus, ScenarioEventEndRound event, float tmDelay)
 	}
 }
 
-bool CStats::IsVisible(edict_t* pEntity, edict_t* pTarget)
+bool CStats::IsVisible(CBasePlayer* Player, CBasePlayer* Target)
 {
-	if (!FNullEnt(pEntity) && !FNullEnt(pTarget))
+	if (!FNullEnt(Player) && !FNullEnt(Target))
 	{
+		auto pEntity = Player->edict();
+
+		auto pTarget = Target->edict();
+
 		if (pTarget->v.effects & EF_NODRAW || pTarget->v.flags & FL_NOTARGET)
 		{
 			return false;
@@ -551,10 +445,21 @@ bool CStats::IsVisible(edict_t* pEntity, edict_t* pTarget)
 			return true;
 		}
 	}
+
 	return false;
 }
 
-int CStats::IsWeapon(CBasePlayer* Player)
+bool CStats::Isblind(CBasePlayer* Player)
+{
+	if ((Player->m_blindStartTime + Player->m_blindHoldTime) >= gpGlobals->time)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+int CStats::IsWeapon(CBasePlayer* Player, bool AllowKnife)
 {
 	if (Player->m_pActiveItem)
 	{
@@ -564,16 +469,16 @@ int CStats::IsWeapon(CBasePlayer* Player)
 
 			if (ItemSlot == PRIMARY_WEAPON_SLOT || ItemSlot == PISTOL_SLOT || ItemSlot == KNIFE_SLOT || ItemSlot == GRENADE_SLOT)
 			{
-				//auto ItemIndex = Player->m_pActiveItem->m_iId;
+				auto ItemIndex = Player->m_pActiveItem->m_iId;
 
-				//if ((!AllowKnife && ItemIndex == WEAPON_KNIFE) || (!AllowHeGrenade && ItemIndex == WEAPON_HEGRENADE))
-				//{
-				//	return WEAPON_NONE;
-				//}
-
-				if (Player->m_pActiveItem->m_iId != WEAPON_SMOKEGRENADE && Player->m_pActiveItem->m_iId != WEAPON_FLASHBANG)
+				if (ItemIndex != WEAPON_SMOKEGRENADE && ItemIndex != WEAPON_FLASHBANG)
 				{
-					return Player->m_pActiveItem->m_iId;
+					if (!AllowKnife && ItemIndex == WEAPON_KNIFE)
+					{
+						return WEAPON_NONE;
+					}
+
+					return false;
 				}
 			}
 		}
@@ -582,9 +487,9 @@ int CStats::IsWeapon(CBasePlayer* Player)
 	return WEAPON_NONE;
 }
 
-int CStats::CountAlive(TeamName Team)
+int* CStats::CountAlive()
 {
-	int Count = 0;
+	int Alive[SPECTATOR + 1] = { 0 };
 
 	for (int i = 1; i <= gpGlobals->maxClients; ++i)
 	{
@@ -596,14 +501,14 @@ int CStats::CountAlive(TeamName Team)
 			{
 				if (Player->IsAlive())
 				{
-					if (Player->m_iTeam == Team)
+					if (Player->m_iTeam == TERRORIST || Player->m_iTeam == CT)
 					{
-						Count++;
+						Alive[Player->m_iTeam]++;
 					}
 				}
 			}
 		}
 	}
 
-	return Count;
+	return Alive;
 }

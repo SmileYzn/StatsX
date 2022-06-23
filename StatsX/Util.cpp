@@ -108,5 +108,3 @@ void CUtil::SayText(edict_t* pEntity, int Sender, const char* Format, ...)
 		}
 	}
 }
-
-
