@@ -24,6 +24,10 @@ public:
 	void RoundFreezeEnd();
 	void RoundEnd(int winStatus, ScenarioEventEndRound event, float tmDelay);
 
+	bool IsVisible(edict_t* pSeeing, edict_t* pSeen);
+	int IsWeapon(CBasePlayer* Player);
+	int CountAlive(TeamName Team);
+
 private:
 	CPlayer m_Data[MAX_CLIENTS + 1];
 

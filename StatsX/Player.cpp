@@ -41,6 +41,8 @@ void CPlayer::Clear()
 	memset(this->Versus, 0, sizeof(this->Versus));
 
 	memset(this->Money, 0, sizeof(this->Money));
+
+	memset(this->HackStats, 0, sizeof(this->HackStats));
 }
 
 void CPlayer::Init(const char* InitName, const  char* InitAuth)

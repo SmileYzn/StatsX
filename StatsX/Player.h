@@ -53,6 +53,17 @@ enum WeaponStatsGroup
 	WEAPON_DAMAGE = 5, // Test
 };
 
+/**
+* Hack Stats Group
+*/
+enum HackStatsGroup
+{
+	HACK_WALL_FRAG		= 0, // OK Counting
+	HACK_BLIND_FRAGS	= 1, // OK Counting
+	HACK_ONE_SHOT       = 3, // TODO: Lacking todo if is really the first shot made
+	HACK_NO_SCOPE		= 2, // OK Counting
+};
+
 class CPlayer
 {
 public:
@@ -81,5 +92,5 @@ public:
 	int KillStreak[MAX_CLIENTS + 1] = { 0 };					// Test
 	int Versus[MAX_CLIENTS + 1] = { 0 };						// Test
 	int Money[RT_VIP_RESCUED_MYSELF + 1] = { 0 };				// OK
-	int WallFrags = 0;											// To do: detect wall kills
+	int HackStats[HACK_NO_SCOPE + 1] = { 0 };											// To do: detect wall kills
 };

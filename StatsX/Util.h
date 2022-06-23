@@ -14,7 +14,6 @@ public:
 	cvar_t* CvarRegister(const char* Name, const char* Value);
 	void ServerPrint(const char* Format, ...);
 	void SayText(edict_t* pEntity, int Sender, const char* Format, ...);
-	bool IsVisible(edict_t* pSeeing, edict_t* pSeen);
 };
 
 extern CUtil gUtil;
