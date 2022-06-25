@@ -60,7 +60,7 @@ enum HackStatsGroup
 {
 	HACK_WALL_FRAG		= 0, // OK Counting
 	HACK_BLIND_FRAG		= 1, // OK Counting
-	HACK_SOMKE_FRAG     = 2, // To do
+	HACK_SMOKE_FRAG     = 2, // To do
 	HACK_ONE_SHOT       = 3, // OK Counting
 	HACK_NO_SCOPE		= 4, // OK Counting
 };
