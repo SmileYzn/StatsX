@@ -176,6 +176,11 @@ void CStats::Killed(CBasePlayer* Player, entvars_t* pevAttacker, int iGib)
 								this->m_Data[KillerIndex].HackStats[HACK_BLIND_FRAG]++;
 							}
 
+							if (this->InsideSmoke(Killer, Player, 115.0f) != 0)
+							{
+								this->m_Data[KillerIndex].HackStats[HACK_SMOKE_FRAG]++;
+							}
+
 							int* PlayerCount = this->CountAlive();
 
 							for (int i = 1; i <= gpGlobals->maxClients; ++i)
@@ -485,6 +490,46 @@ int CStats::IsWeapon(CBasePlayer* Player, bool AllowKnife)
 	}
 
 	return WEAPON_NONE;
+}
+
+// Result 0: No players
+// Result 1: Attacker is inside smoke
+// Result 2: Victim is inside smoke
+// Result 3: Both are inside smoke
+int CStats::InsideSmoke(CBasePlayer* Player, CBasePlayer* Target, float Distance) // 115.0f
+{
+	int Result = 0;
+
+	if (g_ReGameFuncs)
+	{
+		CGrenade* pEntity = nullptr;
+
+		while ((pEntity = (CGrenade*)g_ReGameFuncs->UTIL_FindEntityByString((CBaseEntity*)pEntity, "classname", "grenade")))
+		{
+			if (pEntity->m_bDetonated)
+			{
+				if (pEntity->m_SGSmoke > 0)
+				{
+					if ((pEntity->m_vSmokeDetonate - Player->edict()->v.origin).IsLengthLessThan(Distance))
+					{
+						Result += 1;
+					}
+
+					if ((pEntity->m_vSmokeDetonate - Target->edict()->v.origin).IsLengthLessThan(Distance))
+					{
+						Result += 2;
+					}
+
+					if (Result)
+					{
+						return Result;
+					}
+				}
+			}
+		}
+	}
+
+	return Result;
 }
 
 int* CStats::CountAlive()

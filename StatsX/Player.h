@@ -93,5 +93,5 @@ public:
 	int KillStreak[MAX_CLIENTS + 1] = { 0 };					// Test
 	int Versus[MAX_CLIENTS + 1] = { 0 };						// Test
 	int Money[RT_VIP_RESCUED_MYSELF + 1] = { 0 };				// OK
-	int HackStats[HACK_NO_SCOPE + 1] = { 0 };											// To do: detect wall kills
+	int HackStats[HACK_NO_SCOPE + 1] = { 0 };					// To do: Detect smoke kills
 };

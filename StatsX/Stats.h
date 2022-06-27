@@ -27,6 +27,7 @@ public:
 	bool IsVisible(CBasePlayer* Player, CBasePlayer* Target);
 	bool Isblind(CBasePlayer* Player);
 	int IsWeapon(CBasePlayer* Player, bool AllowKnife);
+	int InsideSmoke(CBasePlayer* Player, CBasePlayer* Target, float Distance);
 	int* CountAlive();
 
 private:
