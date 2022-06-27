@@ -179,6 +179,8 @@ void CStats::Killed(CBasePlayer* Player, entvars_t* pevAttacker, int iGib)
 							if (this->InsideSmoke(Killer, Player, 115.0f) != 0)
 							{
 								this->m_Data[KillerIndex].HackStats[HACK_SMOKE_FRAG]++;
+
+								gUtil.SayText(Killer->edict(), Killer->entindex(), "%s killed %s", STRING(Killer->edict()->v.netname), STRING(Player->edict()->v.netname));
 							}
 
 							int* PlayerCount = this->CountAlive();
@@ -519,7 +521,7 @@ int CStats::InsideSmoke(CBasePlayer* Player, CBasePlayer* Target, float Distance
 					{
 						Result += 2;
 					}
-
+					
 					if (Result)
 					{
 						return Result;
