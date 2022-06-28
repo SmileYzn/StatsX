@@ -417,15 +417,12 @@ void CStats::RoundEnd(int winStatus, ScenarioEventEndRound event, float tmDelay)
 
 void CStats::ExplodeSmokeGrenade(CGrenade* pGrenade)
 {
-	// THE MODEL TO CHECK IF IS SMOKE SHOT IS NOT MODEL OF SMOKE GRENADE ITSELF, BUT IT SMOKE PUFFS
-	
-	//pGrenade->edict()->v.renderfx = kRenderFxGlowShell;
-	//pGrenade->edict()->v.rendercolor = Vector(float(0), float(255), float(0));
-	//pGrenade->edict()->v.rendermode = kRenderNormal;
-	//pGrenade->edict()->v.renderamt = 100.0f;
-	//
+	// CBotManager::IsLineBlockedBySmoke(const Vector *from, const Vector *to)
+}
 
-	//gUtil.ServerPrint("%f %f %f", pGrenade->edict()->v.size[0], pGrenade->edict()->v.size[1], pGrenade->edict()->v.size[2]);
+bool CStats::IsLineBlockedBySmoke(const Vector* from, const Vector* to)
+{
+	//CBotManager::IsLineBlockedBySmoke(const Vector *from, const Vector *to)
 }
 
 bool CStats::IsVisible(CBasePlayer* Player, CBasePlayer* Target)

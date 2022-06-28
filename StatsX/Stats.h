@@ -25,6 +25,8 @@ public:
 	void RoundEnd(int winStatus, ScenarioEventEndRound event, float tmDelay);
 	void ExplodeSmokeGrenade(CGrenade* pGrenade);
 
+	bool IsLineBlockedBySmoke(const Vector* from, const Vector* to);
+
 	bool IsVisible(CBasePlayer* Player, CBasePlayer* Target);
 	bool Isblind(CBasePlayer* Player);
 	int IsWeapon(CBasePlayer* Player, bool AllowKnife);
