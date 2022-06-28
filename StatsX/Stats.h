@@ -25,12 +25,13 @@ public:
 	void RoundEnd(int winStatus, ScenarioEventEndRound event, float tmDelay);
 	void ExplodeSmokeGrenade(CGrenade* pGrenade);
 
-	bool IsLineBlockedBySmoke(const Vector* from, const Vector* to);
+	bool IsLineBlockedBySmoke(Vector from, Vector to, Vector smokeOrigin);
+	bool CheckSmoke(CBasePlayer* Player, CBasePlayer* Target);
 
 	bool IsVisible(CBasePlayer* Player, CBasePlayer* Target);
 	bool Isblind(CBasePlayer* Player);
 	int IsWeapon(CBasePlayer* Player, bool AllowKnife);
-	int* CountAlive();
+	int CountAlive(int Alive[SPECTATOR + 1]);
 
 private:
 	CPlayer m_Data[MAX_CLIENTS + 1];

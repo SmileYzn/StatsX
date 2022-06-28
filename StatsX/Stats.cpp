@@ -173,10 +173,19 @@ void CStats::Killed(CBasePlayer* Player, entvars_t* pevAttacker, int iGib)
 									{
 										this->m_Data[KillerIndex].HackStats[HACK_BLIND_FRAG]++;
 									}
+
+									if (this->CheckSmoke(Killer, Player))
+									{
+										gUtil.ServerPrint("TEST SMOKE");
+
+										gUtil.SayText(Killer->edict(), Killer->entindex(), "TEST SMOKE");
+									}
 								}
 							}
 
-							int* PlayerCount = this->CountAlive();
+							int PlayerCount[SPECTATOR + 1] = { 0 };
+
+							this->CountAlive(PlayerCount);
 
 							for (int i = 1; i <= gpGlobals->maxClients; ++i)
 							{
@@ -420,9 +429,151 @@ void CStats::ExplodeSmokeGrenade(CGrenade* pGrenade)
 	// CBotManager::IsLineBlockedBySmoke(const Vector *from, const Vector *to)
 }
 
-bool CStats::IsLineBlockedBySmoke(const Vector* from, const Vector* to)
+bool CStats::IsLineBlockedBySmoke(Vector from, Vector to, Vector smokeOrigin) // CBotManager::IsLineBlockedBySmoke(const Vector *from, const Vector *to)
 {
-	//CBotManager::IsLineBlockedBySmoke(const Vector *from, const Vector *to)
+	const float smokeRadius = 115.0f;
+
+	const float smokeRadiusSq = smokeRadius * smokeRadius;
+
+	// distance along line of sight covered by smoke
+	float totalSmokedLength = 0.0f;
+
+	// compute unit vector and length of line of sight segment
+	Vector sightDir = to - from;
+
+	float sightLength = sightDir.NormalizeInPlace();
+
+	Vector toGrenade = smokeOrigin - from;
+
+	float alongDist = DotProduct(toGrenade, sightDir);
+
+	// compute closest point to grenade along line of sight ray
+	Vector close;
+
+	// constrain closest point to line segment
+	if (alongDist < 0.0f)
+	{
+		close = from;
+	}
+
+	else if (alongDist >= sightLength)
+	{
+		close = to;
+	}
+	else
+	{
+		close = from + sightDir * alongDist;
+	}
+
+	// if closest point is within smoke radius, the line overlaps the smoke cloud
+	Vector toClose = close - smokeOrigin;
+
+	float lengthSq = toClose.LengthSquared();
+
+	if (lengthSq < smokeRadiusSq)
+	{
+		// some portion of the ray intersects the cloud
+		float fromSq = toGrenade.LengthSquared();
+
+		float toSq = (smokeOrigin - to).LengthSquared();
+
+		if (fromSq < smokeRadiusSq)
+		{
+			if (toSq < smokeRadiusSq)
+			{
+				// both 'from' and 'to' lie within the cloud
+				// entire length is smoked
+				totalSmokedLength += (to - from).Length();
+			}
+			else
+			{
+				// 'from' is inside the cloud, 'to' is outside
+				// compute half of total smoked length as if ray crosses entire cloud chord
+				float halfSmokedLength = Q_sqrt(smokeRadiusSq - lengthSq);
+
+				if (alongDist > 0.0f)
+				{
+					// ray goes thru 'close'
+					totalSmokedLength += halfSmokedLength + (close - from).Length();
+				}
+				else
+				{
+					// ray starts after 'close'
+					totalSmokedLength += halfSmokedLength - (close - from).Length();
+				}
+			}
+		}
+		else if (toSq < smokeRadiusSq)
+		{
+			// 'from' is outside the cloud, 'to' is inside
+			// compute half of total smoked length as if ray crosses entire cloud chord
+			float halfSmokedLength = Q_sqrt(smokeRadiusSq - lengthSq);
+
+			Vector v = to - smokeOrigin;
+
+			if (DotProduct(v, sightDir) > 0.0f)
+			{
+				// ray goes thru 'close'
+				totalSmokedLength += halfSmokedLength + (close - to).Length();
+			}
+			else
+			{
+				// ray ends before 'close'
+				totalSmokedLength += halfSmokedLength - (close - to).Length();
+			}
+		}
+		else
+		{
+			// 'from' and 'to' lie outside of the cloud - the line of sight completely crosses it
+			// determine the length of the chord that crosses the cloud
+
+			float smokedLength = 2.0f * Q_sqrt(smokeRadiusSq - lengthSq);
+
+			totalSmokedLength += smokedLength;
+		}
+	}
+
+	// define how much smoke a bot can see thru
+	const float maxSmokedLength = 0.7f * smokeRadius;
+
+	// return true if the total length of smoke-covered line-of-sight is too much
+	return (totalSmokedLength > maxSmokedLength);
+}
+
+bool CStats::CheckSmoke(CBasePlayer* Player, CBasePlayer* Target)
+{
+	if (g_ReGameFuncs)
+	{
+		if (!FNullEnt(Player) && !FNullEnt(Target))
+		{
+			auto pPlayer = Player->edict();
+
+			auto pTarget = Target->edict();
+
+			if (pTarget->v.effects & EF_NODRAW || pTarget->v.flags & FL_NOTARGET)
+			{
+				return false;
+			}
+
+			CGrenade* pGrenade = nullptr;
+
+			while ((pGrenade = (CGrenade*)g_ReGameFuncs->UTIL_FindEntityByString((CBaseEntity*)pGrenade, "classname", "grenade")))
+			{
+				if (pGrenade->m_bDetonated)
+				{
+					if (pGrenade->m_SGSmoke > 0)
+					{
+						if (this->IsLineBlockedBySmoke(pPlayer->v.origin, pTarget->v.origin, pGrenade->pev->origin))
+						{
+							return true;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return false;
 }
 
 bool CStats::IsVisible(CBasePlayer* Player, CBasePlayer* Target)
@@ -497,9 +648,9 @@ int CStats::IsWeapon(CBasePlayer* Player, bool AllowKnife)
 	return WEAPON_NONE;
 }
 
-int* CStats::CountAlive()
+int CStats::CountAlive(int Alive[SPECTATOR + 1])
 {
-	int Alive[SPECTATOR + 1] = { 0 };
+	int Count[SPECTATOR + 1] = { 0 };
 
 	for (int i = 1; i <= gpGlobals->maxClients; ++i)
 	{
@@ -513,12 +664,12 @@ int* CStats::CountAlive()
 				{
 					if (Player->m_iTeam == TERRORIST || Player->m_iTeam == CT)
 					{
-						Alive[Player->m_iTeam]++;
+						Count[Player->m_iTeam]++;
 					}
 				}
 			}
 		}
 	}
 
-	return Alive;
+	return Count[TERRORIST] + Count[CT];
 }
