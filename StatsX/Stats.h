@@ -23,11 +23,11 @@ public:
 	void ExplodeBomb(CGrenade* pThis, TraceResult* ptr, int bitsDamageType);
 	void RoundFreezeEnd();
 	void RoundEnd(int winStatus, ScenarioEventEndRound event, float tmDelay);
+	void ExplodeSmokeGrenade(CGrenade* pGrenade);
 
 	bool IsVisible(CBasePlayer* Player, CBasePlayer* Target);
 	bool Isblind(CBasePlayer* Player);
 	int IsWeapon(CBasePlayer* Player, bool AllowKnife);
-	int InsideSmoke(CBasePlayer* Player, CBasePlayer* Target, float Distance);
 	int* CountAlive();
 
 private:

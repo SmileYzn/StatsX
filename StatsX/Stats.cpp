@@ -168,19 +168,12 @@ void CStats::Killed(CBasePlayer* Player, entvars_t* pevAttacker, int iGib)
 									{
 										this->m_Data[KillerIndex].HackStats[HACK_WALL_FRAG]++;
 									}
+
+									if (this->Isblind(Killer))
+									{
+										this->m_Data[KillerIndex].HackStats[HACK_BLIND_FRAG]++;
+									}
 								}
-							}
-
-							if (this->Isblind(Killer))
-							{
-								this->m_Data[KillerIndex].HackStats[HACK_BLIND_FRAG]++;
-							}
-
-							if (this->InsideSmoke(Killer, Player, 115.0f) != 0)
-							{
-								this->m_Data[KillerIndex].HackStats[HACK_SMOKE_FRAG]++;
-
-								gUtil.SayText(Killer->edict(), Killer->entindex(), "%s killed %s", STRING(Killer->edict()->v.netname), STRING(Player->edict()->v.netname));
 							}
 
 							int* PlayerCount = this->CountAlive();
@@ -422,6 +415,19 @@ void CStats::RoundEnd(int winStatus, ScenarioEventEndRound event, float tmDelay)
 	}
 }
 
+void CStats::ExplodeSmokeGrenade(CGrenade* pGrenade)
+{
+	// THE MODEL TO CHECK IF IS SMOKE SHOT IS NOT MODEL OF SMOKE GRENADE ITSELF, BUT IT SMOKE PUFFS
+	
+	//pGrenade->edict()->v.renderfx = kRenderFxGlowShell;
+	//pGrenade->edict()->v.rendercolor = Vector(float(0), float(255), float(0));
+	//pGrenade->edict()->v.rendermode = kRenderNormal;
+	//pGrenade->edict()->v.renderamt = 100.0f;
+	//
+
+	//gUtil.ServerPrint("%f %f %f", pGrenade->edict()->v.size[0], pGrenade->edict()->v.size[1], pGrenade->edict()->v.size[2]);
+}
+
 bool CStats::IsVisible(CBasePlayer* Player, CBasePlayer* Target)
 {
 	if (!FNullEnt(Player) && !FNullEnt(Target))
@@ -485,53 +491,13 @@ int CStats::IsWeapon(CBasePlayer* Player, bool AllowKnife)
 						return WEAPON_NONE;
 					}
 
-					return false;
+					return ItemIndex;
 				}
 			}
 		}
 	}
 
 	return WEAPON_NONE;
-}
-
-// Result 0: No players
-// Result 1: Attacker is inside smoke
-// Result 2: Victim is inside smoke
-// Result 3: Both are inside smoke
-int CStats::InsideSmoke(CBasePlayer* Player, CBasePlayer* Target, float Distance) // 115.0f
-{
-	int Result = 0;
-
-	if (g_ReGameFuncs)
-	{
-		CGrenade* pEntity = nullptr;
-
-		while ((pEntity = (CGrenade*)g_ReGameFuncs->UTIL_FindEntityByString((CBaseEntity*)pEntity, "classname", "grenade")))
-		{
-			if (pEntity->m_bDetonated)
-			{
-				if (pEntity->m_SGSmoke > 0)
-				{
-					if ((pEntity->m_vSmokeDetonate - Player->edict()->v.origin).IsLengthLessThan(Distance))
-					{
-						Result += 1;
-					}
-
-					if ((pEntity->m_vSmokeDetonate - Target->edict()->v.origin).IsLengthLessThan(Distance))
-					{
-						Result += 2;
-					}
-					
-					if (Result)
-					{
-						return Result;
-					}
-				}
-			}
-		}
-	}
-
-	return Result;
 }
 
 int* CStats::CountAlive()
