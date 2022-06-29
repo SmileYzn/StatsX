@@ -2,9 +2,7 @@
 
 void CPlayer::Clear()
 {
-	memset(this->Name, 0, sizeof(this->Name));
-
-	memset(this->Auth, 0, sizeof(this->Auth));
+	memset(this->Index, 0, sizeof(this->Index));
 
 	this->Frags = 0;
 
@@ -45,12 +43,10 @@ void CPlayer::Clear()
 	memset(this->HackStats, 0, sizeof(this->HackStats));
 }
 
-void CPlayer::Init(const char* InitName, const  char* InitAuth)
+void CPlayer::Init(const char* IndexKey)
 {
 	this->Clear();
 
-	strncpy(this->Name, InitName, sizeof(this->Name));
-
-	strncpy(this->Auth, InitAuth, sizeof(this->Auth));
+	strncpy(this->Index, IndexKey, sizeof(this->Index));
 }
 

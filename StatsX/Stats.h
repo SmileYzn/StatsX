@@ -1,9 +1,9 @@
 #pragma once
 
 #define MANAGER_ASSISTANCE_DMG  50		// Mininum damage to take assistance for player
-#define MANAGER_RWS_MAP_TARGET  0.7f	// Round Win Share:
-#define MANAGER_RWS_C4_EXPLODE  0.3f	// Round Win Share:
-#define MANAGER_RWS_C4_DEFUSED  0.3f	// Round Win Share:
+#define MANAGER_RWS_MAP_TARGET  0.7f	// Round Win Share: Amount added to each player of winner team if map objective is complete by winner team
+#define MANAGER_RWS_C4_EXPLODE  0.3f	// Round Win Share: Extra amount added to player from winner team that planted the bomb and bomb explode
+#define MANAGER_RWS_C4_DEFUSED  0.3f	// Round Win Share: Extra amount added to player from winner team that defused the bomb
 
 class CStats
 {
@@ -23,13 +23,7 @@ public:
 	void ExplodeBomb(CGrenade* pThis, TraceResult* ptr, int bitsDamageType);
 	void RoundFreezeEnd();
 	void RoundEnd(int winStatus, ScenarioEventEndRound event, float tmDelay);
-	void ExplodeSmokeGrenade(CGrenade* pGrenade);
 
-	bool IsLineBlockedBySmoke(Vector from, Vector to, Vector smokeOrigin);
-	bool CheckSmoke(CBasePlayer* Player, CBasePlayer* Target);
-
-	bool IsVisible(CBasePlayer* Player, CBasePlayer* Target);
-	bool Isblind(CBasePlayer* Player);
 	int IsWeapon(CBasePlayer* Player, bool AllowKnife);
 	int CountAlive(int Alive[SPECTATOR + 1]);
 
